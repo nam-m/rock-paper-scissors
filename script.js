@@ -1,19 +1,21 @@
+/* ------------------------------------------------------------------------------
+   Select random Rock, Paper, or Scissors for computer
+*/
 function computerPlay() {
-    const choice = ['Rock', 'Paper', 'Scissors'];
-    const computerSelection = choice[Math.floor(Math.random() * choice.length)];
-    // console.log(`Computer: ${computerSelection}`);
-    return 'Rock';
+    const options = ['Rock', 'Paper', 'Scissors'];
+    return options[Math.floor(Math.random() * options.length)];
 }
 
+/* ------------------------------------------------------------------------------
+   Play one round between user and computer, the winner gets 1 point
+*/
 function playRound(playerSelection, computerSelection) {
     const firstChar = playerSelection.charAt(0).toUpperCase();
     playerSelection = firstChar.concat(playerSelection.substring(1));
-    // console.log(`Player: ${input}`);
 
-    let result = "Tie Game";
-
+    let result;
     if (playerSelection == computerSelection) {
-        //pass
+        result = "Tie Game";
     } else if (playerSelection == 'Rock' && computerSelection == 'Scissors'
         || playerSelection == 'Paper' && computerSelection == 'Rock'
         || playerSelection == 'Scissors' && computerSelection == 'Paper'
@@ -28,6 +30,10 @@ function playRound(playerSelection, computerSelection) {
     return result;
 }
 
+/* ------------------------------------------------------------------------------
+   Play a game of multiple rounds between user and computer
+   and announce results based on total points from all rounds
+*/
 function game() {
     for (let i = 0; i < 5; i++) {
         const playerSelection = prompt("What's your hand?");
@@ -36,18 +42,23 @@ function game() {
         let result = playRound(playerSelection, computerSelection);
         console.log(`Round ${i + 1}: ${result}`);
     }
-    console.log(calculatePoints(playerPoints, computerPoints));
+    console.log(announceResult(playerPoints, computerPoints));
 }
 
-function calculatePoints (playerPoints, computerPoints) {
-    let finalResult = (playerPoints > computerPoints) ? 'You won the game!' : 
-                  (playerPoints < computerPoints) ? 'You lost the game' :
-                   'It\'s a tie game';
-    return finalResult;
+/* ------------------------------------------------------------------------------
+   Announce result based on player and computer points
+*/
+function announceResult (playerPoints, computerPoints) {
+    return (playerPoints > computerPoints) ? 'You won the game!' : 
+           (playerPoints < computerPoints) ? 'You lost the game' :
+           'It\'s a tie game';
 }
+
+/* ------------------------------------------------------------------------------
+   Main program
+*/
 
 /* One round game */
-
 // Player can enter case-insensitive option
 // const playerSelection = 'RoCK';
 // const computerSelection = computerPlay();
