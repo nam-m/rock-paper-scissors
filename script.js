@@ -1,12 +1,12 @@
 function computerPlay() {
-    let choice = ['Rock', 'Paper', 'Scissors'];
-    let computerSelection = choice[Math.floor(Math.random() * choice.length)];
+    const choice = ['Rock', 'Paper', 'Scissors'];
+    const computerSelection = choice[Math.floor(Math.random() * choice.length)];
     // console.log(`Computer: ${computerSelection}`);
-    return computerSelection;
+    return 'Rock';
 }
 
 function playRound(playerSelection, computerSelection) {
-    let firstChar = playerSelection.charAt(0).toUpperCase();
+    const firstChar = playerSelection.charAt(0).toUpperCase();
     playerSelection = firstChar.concat(playerSelection.substring(1));
     // console.log(`Player: ${input}`);
 
@@ -19,23 +19,34 @@ function playRound(playerSelection, computerSelection) {
         || playerSelection == 'Scissors' && computerSelection == 'Paper'
         ) {
             result = `You Win! ${playerSelection} beats ${computerSelection}`;
-    }
-    else
+            playerPoints++;
+    } else {
         result = `You Lose! ${computerSelection} beats ${playerSelection}`;
+        computerPoints++;
+    }
 
     return result;
 }
 
 function game() {
-    for (let i = 0; i < 1; i++) {
-        let playerSelection = prompt("What's your hand?");
-        let computerSelection = computerPlay()
+    for (let i = 0; i < 5; i++) {
+        const playerSelection = prompt("What's your hand?");
+        const computerSelection = computerPlay();
+        
         let result = playRound(playerSelection, computerSelection);
         console.log(`Round ${i + 1}: ${result}`);
     }
+    console.log(calculatePoints(playerPoints, computerPoints));
 }
 
-/* First round game */
+function calculatePoints (playerPoints, computerPoints) {
+    let finalResult = (playerPoints > computerPoints) ? 'You won the game!' : 
+                  (playerPoints < computerPoints) ? 'You lost the game' :
+                   'It\'s a tie game';
+    return finalResult;
+}
+
+/* One round game */
 
 // Player can enter case-insensitive option
 // const playerSelection = 'RoCK';
@@ -43,4 +54,6 @@ function game() {
 // console.log(playRound(playerSelection, computerSelection));
 
 /* Five round game */
+let playerPoints = 0;
+let computerPoints = 0;
 game();
