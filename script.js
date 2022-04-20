@@ -26,7 +26,7 @@ function playRound(playerSelection, computerSelection) {
         result = `You Lose! ${computerSelection} beats ${playerSelection}`;
         computerPoints++;
     }
-
+    console.log(result);
     return result;
 }
 
@@ -60,11 +60,40 @@ function announceResult (playerPoints, computerPoints) {
 
 /* One round game */
 // Player can enter case-insensitive option
-// const playerSelection = 'RoCK';
-// const computerSelection = computerPlay();
-// console.log(playRound(playerSelection, computerSelection));
-
-/* Five round game */
 let playerPoints = 0;
 let computerPoints = 0;
-game();
+
+// const playerSelection = 'RoCK';
+const computerSelection = computerPlay();
+// console.log(playRound(playerSelection, computerSelection));
+
+const div = document.createElement('div');
+
+const rockButton = document.createElement('button');
+const paperButton = document.createElement('button');
+const scissorsButton = document.createElement('button');
+
+const result = document.createElement('div');
+
+rockButton.textContent = 'rock';
+paperButton.textContent = 'paper';
+scissorsButton.textContent = 'scissors';
+
+div.append(rockButton, paperButton, scissorsButton, result);
+document.body.appendChild(div);
+
+const buttons = document.querySelectorAll('button');
+// buttons.forEach(button => console.log(button));
+
+buttons.forEach(button => {
+    button.classList.add('player');
+    button.setAttribute('style', 'font-size: 3rem;');
+})
+
+buttons.forEach(button => button.addEventListener('click', () => {
+    playRound(`${button.textContent}`, computerPlay());
+}));
+
+
+/* Five round game */
+// game();
