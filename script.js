@@ -26,7 +26,8 @@ function playRound(playerSelection, computerSelection) {
         result = `You Lose! ${computerSelection} beats ${playerSelection}`;
         computerPoints++;
     }
-    console.log(result);
+    // console.log(result);
+
     return result;
 }
 
@@ -35,14 +36,23 @@ function playRound(playerSelection, computerSelection) {
    and announce results based on total points from all rounds
 */
 function game() {
+    let resultOutput = document.getElementById('result');
+    
     for (let i = 0; i < 5; i++) {
-        const playerSelection = prompt("What's your hand?");
-        const computerSelection = computerPlay();
-        
-        let result = playRound(playerSelection, computerSelection);
-        console.log(`Round ${i + 1}: ${result}`);
+        let result;
+        const buttons = document.querySelectorAll('button');
+        // buttons.forEach(button => {
+        //     button.addEventListener('click', () => {
+        //         result = playRound(`${button.textContent}`, computerPlay());
+        //     })
+        // });
+
+        result = playRound('rock', computerPlay());
+        let resultLine = document.createTextNode(`Round ${i + 1}: ${result}`);
+        const br = document.createElement('br');
+        resultOutput.append(resultLine, br);
     }
-    console.log(announceResult(playerPoints, computerPoints));
+    resultOutput.appendChild(document.createTextNode(announceResult(playerPoints, computerPoints)));
 }
 
 /* ------------------------------------------------------------------------------
@@ -67,6 +77,9 @@ let computerPoints = 0;
 const computerSelection = computerPlay();
 // console.log(playRound(playerSelection, computerSelection));
 
+/* ----------------------------------------------------------------------------------
+   Add buttons and results script
+*/
 const div = document.createElement('div');
 
 const rockButton = document.createElement('button');
@@ -74,6 +87,7 @@ const paperButton = document.createElement('button');
 const scissorsButton = document.createElement('button');
 
 const result = document.createElement('div');
+result.setAttribute('id', 'result');
 
 rockButton.textContent = 'rock';
 paperButton.textContent = 'paper';
@@ -82,18 +96,18 @@ scissorsButton.textContent = 'scissors';
 div.append(rockButton, paperButton, scissorsButton, result);
 document.body.appendChild(div);
 
+/* -----------------------------------------------------------------------------
+*/
 const buttons = document.querySelectorAll('button');
 // buttons.forEach(button => console.log(button));
 
 buttons.forEach(button => {
     button.classList.add('player');
     button.setAttribute('style', 'font-size: 3rem;');
-})
-
-buttons.forEach(button => button.addEventListener('click', () => {
-    playRound(`${button.textContent}`, computerPlay());
-}));
-
+    // button.addEventListener('click', () => {
+    //     result.textContent = (playRound(`${button.textContent}`, computerPlay()));
+    // })
+});
 
 /* Five round game */
-// game();
+game();
