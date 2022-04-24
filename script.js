@@ -10,13 +10,15 @@ function computerPlay() {
    Play one round between user and computer, the winner gets 1 point
 */
 function playRound(playerSelection, computerSelection) {
+    // Captialize first character of player selection 
     const firstChar = playerSelection.charAt(0).toUpperCase();
     playerSelection = firstChar.concat(playerSelection.substring(1));
-    let resultText;
-
-    // Get DOM elements
+    
+    // Get DOM element
     let resultDiv = document.getElementById('result');
     
+    // Get result based on player and computer selection
+    let resultText;
     if (playerSelection == computerSelection) {
         resultText = "Tie Game";
     } else if (playerSelection == 'Rock' && computerSelection == 'Scissors'
@@ -34,10 +36,13 @@ function playRound(playerSelection, computerSelection) {
     const br = document.createElement('br');
     resultDiv.append(resultOneRoundText, br);
 
-    if (round == 5) {
+    // Announce final scores, result and end game
+    if (playerPoints == SCORES_TO_WIN || computerPoints == SCORES_TO_WIN) {
+        const finalScoreText = document.createTextNode(`Player: ${playerPoints}\t Computer: ${computerPoints}`);
         const finalResultText = document.createTextNode(announceFinalResult(playerPoints, computerPoints));
-        const br = document.createElement('br');
-        resultDiv.append(finalResultText, br);
+
+        resultDiv.append(finalScoreText, document.createElement('br'));    
+        resultDiv.append(finalResultText, document.createElement('br'));
         resetGame();
     }
 }
@@ -47,7 +52,7 @@ function playRound(playerSelection, computerSelection) {
    and announce results based on total points from all rounds
 */
 function game() {
-    const buttons = document.querySelectorAll('button');    
+    const buttons = document.querySelectorAll('button');  
     buttons.forEach(button => {
         button.addEventListener('click', () => {
             playRound(`${button.textContent}`, computerPlay());
@@ -55,20 +60,29 @@ function game() {
     });
 }
 
+/* ------------------------------------------------------------------------------
+   Enable 'Play again' button when one player wins,
+   and reset game is 'Play again' button is pressed
+*/
 function resetGame() {
     const playAgainButton = document.createElement('button');
     let resultDiv = document.getElementById('result');
 
-    playAgainButton.textContent = 'Play again';
     disableButtons();
+    playAgainButton.textContent = 'Play again';
     resultDiv.appendChild(playAgainButton);
 
+    // Reset all variables and elements when 'Play again' button is pressed
     playAgainButton.addEventListener('click', () => {
-        computerPoints = playerPoints = 0;
+        computerPoints = playerPoints = round = 0;
+        resultDiv.textContent = '';
         enableButtons();
     });
 }
 
+/* ------------------------------------------------------------------------------
+   Functions to enable/disable all buttons
+*/
 function enableButtons() {
     const buttons = document.querySelectorAll('button');
     buttons.forEach(button => button.disabled = false);
@@ -78,6 +92,7 @@ function disableButtons() {
     const buttons = document.querySelectorAll('button');
     buttons.forEach(button => button.disabled = true);
 }
+
 /* ------------------------------------------------------------------------------
    Announce result based on player and computer points
 */
@@ -89,27 +104,20 @@ function announceFinalResult (playerPoints, computerPoints) {
 
 /* ------------------------------------------------------------------------------
    Main program
+   ------------------------------------------------------------------------------
 */
-
-/* One round game */
-// Player can enter case-insensitive option
 let playerPoints = 0;
 let computerPoints = 0;
 let round = 0;
-
-// const playerSelection = 'RoCK';
-const computerSelection = computerPlay();
-// console.log(playRound(playerSelection, computerSelection));
+const SCORES_TO_WIN = 5;
 
 /* ----------------------------------------------------------------------------------
-   Add buttons and results script
+   Add buttons and results elements, and append to document in the DOM
 */
 const mainDiv = document.createElement('div');
-
 const rockButton = document.createElement('button');
 const paperButton = document.createElement('button');
 const scissorsButton = document.createElement('button');
-
 
 rockButton.textContent = 'rock';
 paperButton.textContent = 'paper';
@@ -122,6 +130,7 @@ mainDiv.append(rockButton, paperButton, scissorsButton, resultDiv);
 document.body.appendChild(mainDiv);
 
 /* -----------------------------------------------------------------------------
+    Add attributes to buttons
 */
 const buttons = document.querySelectorAll('button');
 
@@ -130,5 +139,4 @@ buttons.forEach(button => {
     button.setAttribute('style', 'font-size: 3rem;');
 });
 
-/* Five round game */
 game();
