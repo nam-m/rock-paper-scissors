@@ -12,23 +12,34 @@ function computerPlay() {
 function playRound(playerSelection, computerSelection) {
     const firstChar = playerSelection.charAt(0).toUpperCase();
     playerSelection = firstChar.concat(playerSelection.substring(1));
+    let resultText;
 
-    let result;
+    // Get DOM elements
+    let resultDiv = document.getElementById('result');
+    
     if (playerSelection == computerSelection) {
-        result = "Tie Game";
+        resultText = "Tie Game";
     } else if (playerSelection == 'Rock' && computerSelection == 'Scissors'
         || playerSelection == 'Paper' && computerSelection == 'Rock'
         || playerSelection == 'Scissors' && computerSelection == 'Paper'
         ) {
-            result = `You Win! ${playerSelection} beats ${computerSelection}`;
+            resultText = `You Win! ${playerSelection} beats ${computerSelection}`;
             playerPoints++;
     } else {
-        result = `You Lose! ${computerSelection} beats ${playerSelection}`;
+        resultText = `You Lose! ${computerSelection} beats ${playerSelection}`;
         computerPoints++;
     }
-    // console.log(result);
+    round++;
 
-    return result;
+    let resultOneRoundText = document.createTextNode(`Round ${round}: ${resultText}`);
+    const br = document.createElement('br');
+    resultDiv.append(resultOneRoundText, br);
+
+    if (round == 5) {
+        const finalResultText = document.createTextNode(announceFinalResult(playerPoints, computerPoints));
+        const br = document.createElement('br');
+        resultDiv.append(finalResultText, br);
+    }
 }
 
 /* ------------------------------------------------------------------------------
@@ -36,29 +47,20 @@ function playRound(playerSelection, computerSelection) {
    and announce results based on total points from all rounds
 */
 function game() {
+    const buttons = document.querySelectorAll('button');
     let resultOutput = document.getElementById('result');
     
-    for (let i = 0; i < 5; i++) {
-        let result;
-        const buttons = document.querySelectorAll('button');
-        // buttons.forEach(button => {
-        //     button.addEventListener('click', () => {
-        //         result = playRound(`${button.textContent}`, computerPlay());
-        //     })
-        // });
-
-        result = playRound('rock', computerPlay());
-        let resultLine = document.createTextNode(`Round ${i + 1}: ${result}`);
-        const br = document.createElement('br');
-        resultOutput.append(resultLine, br);
-    }
-    resultOutput.appendChild(document.createTextNode(announceResult(playerPoints, computerPoints)));
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            playRound(`${button.textContent}`, computerPlay());
+        })
+    });
 }
 
 /* ------------------------------------------------------------------------------
    Announce result based on player and computer points
 */
-function announceResult (playerPoints, computerPoints) {
+function announceFinalResult (playerPoints, computerPoints) {
     return (playerPoints > computerPoints) ? 'You won the game!' : 
            (playerPoints < computerPoints) ? 'You lost the game' :
            'It\'s a tie game';
@@ -72,6 +74,7 @@ function announceResult (playerPoints, computerPoints) {
 // Player can enter case-insensitive option
 let playerPoints = 0;
 let computerPoints = 0;
+let round = 0;
 
 // const playerSelection = 'RoCK';
 const computerSelection = computerPlay();
@@ -80,26 +83,25 @@ const computerSelection = computerPlay();
 /* ----------------------------------------------------------------------------------
    Add buttons and results script
 */
-const div = document.createElement('div');
+const mainDiv = document.createElement('div');
 
 const rockButton = document.createElement('button');
 const paperButton = document.createElement('button');
 const scissorsButton = document.createElement('button');
 
-const result = document.createElement('div');
-result.setAttribute('id', 'result');
-
 rockButton.textContent = 'rock';
 paperButton.textContent = 'paper';
 scissorsButton.textContent = 'scissors';
 
-div.append(rockButton, paperButton, scissorsButton, result);
-document.body.appendChild(div);
+const resultDiv = document.createElement('div');
+resultDiv.setAttribute('id', 'result');
+
+mainDiv.append(rockButton, paperButton, scissorsButton, resultDiv);
+document.body.appendChild(mainDiv);
 
 /* -----------------------------------------------------------------------------
 */
 const buttons = document.querySelectorAll('button');
-// buttons.forEach(button => console.log(button));
 
 buttons.forEach(button => {
     button.classList.add('player');
