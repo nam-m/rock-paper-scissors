@@ -29,9 +29,8 @@ function playRound(playerSelection, computerSelection) {
         resultText = `You Lose! ${computerSelection} beats ${playerSelection}`;
         computerPoints++;
     }
-    round++;
 
-    let resultOneRoundText = document.createTextNode(`Round ${round}: ${resultText}`);
+    let resultOneRoundText = document.createTextNode(`Round ${++round}: ${resultText}`);
     const br = document.createElement('br');
     resultDiv.append(resultOneRoundText, br);
 
@@ -39,6 +38,7 @@ function playRound(playerSelection, computerSelection) {
         const finalResultText = document.createTextNode(announceFinalResult(playerPoints, computerPoints));
         const br = document.createElement('br');
         resultDiv.append(finalResultText, br);
+        resetGame();
     }
 }
 
@@ -47,9 +47,7 @@ function playRound(playerSelection, computerSelection) {
    and announce results based on total points from all rounds
 */
 function game() {
-    const buttons = document.querySelectorAll('button');
-    let resultOutput = document.getElementById('result');
-    
+    const buttons = document.querySelectorAll('button');    
     buttons.forEach(button => {
         button.addEventListener('click', () => {
             playRound(`${button.textContent}`, computerPlay());
@@ -57,6 +55,29 @@ function game() {
     });
 }
 
+function resetGame() {
+    const playAgainButton = document.createElement('button');
+    let resultDiv = document.getElementById('result');
+
+    playAgainButton.textContent = 'Play again';
+    disableButtons();
+    resultDiv.appendChild(playAgainButton);
+
+    playAgainButton.addEventListener('click', () => {
+        computerPoints = playerPoints = 0;
+        enableButtons();
+    });
+}
+
+function enableButtons() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.disabled = false);
+}
+
+function disableButtons() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.disabled = true);
+}
 /* ------------------------------------------------------------------------------
    Announce result based on player and computer points
 */
@@ -89,6 +110,7 @@ const rockButton = document.createElement('button');
 const paperButton = document.createElement('button');
 const scissorsButton = document.createElement('button');
 
+
 rockButton.textContent = 'rock';
 paperButton.textContent = 'paper';
 scissorsButton.textContent = 'scissors';
@@ -106,9 +128,6 @@ const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
     button.classList.add('player');
     button.setAttribute('style', 'font-size: 3rem;');
-    // button.addEventListener('click', () => {
-    //     result.textContent = (playRound(`${button.textContent}`, computerPlay()));
-    // })
 });
 
 /* Five round game */
